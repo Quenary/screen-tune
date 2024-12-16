@@ -1,0 +1,91 @@
+@use "@angular/material" as mat;
+@include mat.core();
+
+@font-face {
+  font-family: "Lato";
+  src: local("Lato"), url("../public/fonts/Lato/Lato-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Lato";
+  src: local("Lato"), url("../public/fonts/Lato/Lato-Bold.ttf");
+  font-weight: 700;
+  font-style: bold;
+}
+@font-face {
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Material Icons"), local("MaterialIcons-Regular"),
+    url("../public/fonts/MaterialIcons/MaterialIcons-Regular.ttf")
+      format("truetype");
+}
+
+html {
+  color-scheme: light dark;
+  @include mat.theme(
+    (
+      color: mat.$cyan-palette,
+      typography: Lato,
+      density: 0,
+    )
+  );
+}
+
+body {
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  overflow: hidden;
+}
+
+* {
+  font-family: "Lato", "Roboto", "Arial";
+  font-style: normal;
+  font-weight: 400;
+  &::-webkit-scrollbar {
+    width: 8px !important;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--mat-sys-primary-container) !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    &:hover {
+      background: var(--mat-sys-primary) !important;
+    }
+  }
+}
+
+div,
+span,
+body {
+  box-sizing: border-box;
+}
+
+.material-icons {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: "liga";
+}

@@ -1,0 +1,186 @@
+<div class="MainClass">
+  @if (isLoading$ | async) {
+  <div class="main-loading">
+    <mat-spinner class="main-loading-spinner"> </mat-spinner>
+  </div>
+  }
+
+  <div class="main-header">
+    <div class="main-header-title">
+      {{ "MAIN.TITLE" | translate }}
+      <div class="main-header-title-version">
+        {{ appVersion$ | async }}
+      </div>
+    </div>
+    <div class="main-header-toggle">
+      <mat-slide-toggle
+        [formControl]="checkUpdatesControl"
+        (change)="onChangeCheckUpdates($event)"
+      >
+        {{ "MAIN.FIELDS.CHECK_UPDATES" | translate }}
+      </mat-slide-toggle>
+      <mat-slide-toggle
+        [formControl]="autoLaunchControl"
+        (change)="onChangeAutoLaunch($event)"
+      >
+        {{ "MAIN.FIELDS.AUTO_LAUNCH" | translate }}
+      </mat-slide-toggle>
+      <mat-slide-toggle
+        [formControl]="launchMinimizedControl"
+        (change)="onChangeLaunchMinimized($event)"
+      >
+        {{ "MAIN.FIELDS.LAUNCH_MINIMIZED" | translate }}
+      </mat-slide-toggle>
+    </div>
+  </div>
+  <div class="main-body scroll-block">
+    <div class="main-body-left">
+      <mat-form-field appearance="fill" class="main-body-item-field">
+        <mat-label>{{ "MAIN.FIELDS.DISPLAYS" | translate }}</mat-label>
+        <mat-select [formControl]="displaysControl" multiple>
+          @for (item of displaysList; track item) {
+          <mat-option [value]="item">{{ item }} </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="main-body-item">
+        <div class="main-body-item-label left">
+          {{ "MAIN.FIELDS.PROCESS.ADD" | translate }}
+        </div>
+        <div class="main-body-item-field flex">
+          <mat-form-field
+            class="search-processes"
+            (click)="onClickProcessesInput()"
+          >
+            <input
+              matInput
+              #processesListInput
+              [formControl]="searchApplicationControl"
+              [placeholder]="'MAIN.FIELDS.PROCESS.FROM_LIST' | translate"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="setApplicationFromList($event)"
+              (closed)="onClosedAutocomplete()"
+            >
+              @if(isLoadingProcesses$ | async) {
+              <mat-option [style.justify-content]="'center'" [disabled]="true">
+                <mat-spinner></mat-spinner>
+              </mat-option>
+              } @for (item of filteredProcesses$ | async; track item) {
+              <mat-option [value]="item">
+                {{ item }}
+              </mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <button
+            mat-fab
+            [title]="'MAIN.FIELDS.PROCESS.FROM_FILE' | translate"
+            (click)="fileInput.click()"
+          >
+            <mat-icon>note_add</mat-icon>
+            <input
+              hidden
+              type="file"
+              id="file"
+              accept=".exe"
+              #fileInput
+              (change)="setApplicationFromFile($event)"
+            />
+          </button>
+        </div>
+      </div>
+
+      <mat-chip-listbox
+        class="main-body-left-applications"
+        [value]="form.controls.appName.value"
+        (change)="setApplication($event.value)"
+      >
+        @for (item of applications$ | async; track item) {
+        <mat-chip-option
+          [selected]="item === form.controls.appName.value"
+          [value]="item"
+          (removed)="removeApplication(item)"
+        >
+          {{ item }}
+          <button matChipRemove [attr.aria-label]="'remove ' + item">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-option>
+        }
+      </mat-chip-listbox>
+    </div>
+
+    <mat-divider [vertical]="true" class="main-body-divider"> </mat-divider>
+
+    <div class="main-body-right">
+      <div class="main-body-item">
+        <div class="main-body-item-label slider">
+          {{ "MAIN.FIELDS.BRIGHTNESS" | translate }}
+        </div>
+        <mat-slider
+          class="main-body-item-field slider"
+          [showTickMarks]="true"
+          min="0"
+          max="1"
+          step="0.01"
+          discrete
+          [disabled]="!form.controls.appName.value"
+        >
+          <input matSliderThumb [formControl]="form.controls.brightness" />
+        </mat-slider>
+      </div>
+
+      <div class="main-body-item">
+        <div class="main-body-item-label slider">
+          {{ "MAIN.FIELDS.CONTRAST" | translate }}
+        </div>
+        <mat-slider
+          class="main-body-item-field slider"
+          [showTickMarks]="true"
+          min="0"
+          max="1"
+          step="0.01"
+          discrete
+          [disabled]="!form.controls.appName.value"
+        >
+          <input matSliderThumb [formControl]="form.controls.contrast" />
+        </mat-slider>
+      </div>
+
+      <div class="main-body-item">
+        <div class="main-body-item-label slider">
+          {{ "MAIN.FIELDS.GAMMA" | translate }}
+        </div>
+        <mat-slider
+          class="main-body-item-field slider gamma"
+          [showTickMarks]="true"
+          min="0.4"
+          max="2.8"
+          step="0.01"
+          discrete
+          [disabled]="!form.controls.appName.value"
+        >
+          <input matSliderThumb [formControl]="form.controls.gamma" />
+        </mat-slider>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-footer">
+    <div class="main-footer-live-preview">
+      <mat-slide-toggle
+        [formControl]="livePreviewControl"
+        (change)="onChangeLivePreview($event)"
+      >
+        {{ "MAIN.FIELDS.LIVE_PREVIEW" | translate }}
+      </mat-slide-toggle>
+    </div>
+  </div>
+
+  <mat-progress-bar [value]="saveProgressBarValue$ | async"> </mat-progress-bar>
+</div>

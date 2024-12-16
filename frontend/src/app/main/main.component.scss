@@ -1,0 +1,202 @@
+@use "@angular/material" as mat;
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.MainClass {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+
+  .main-loading {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    z-index: 999;
+  }
+
+  .main-header {
+    @include mat.theme(
+      (
+        color: mat.$yellow-palette,
+      )
+    );
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .main-header-title {
+      font-weight: 700;
+      font-size: 40px;
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .main-header-title-version {
+        position: absolute;
+        font-size: 14px;
+        top: 0;
+        left: 0;
+        transform: translateX(100%);
+        width: 100%;
+      }
+    }
+    .main-header-toggle {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+  }
+
+  .main-body {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 30px;
+    flex: 1;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    .main-body-divider {
+      height: 100%;
+    }
+
+    .main-body-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      width: 30%;
+      height: 100%;
+      gap: 20px;
+
+      .main-body-left-applications {
+        padding-left: 10px;
+      }
+    }
+    .main-body-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      flex: 1;
+      height: 100%;
+      gap: 20px;
+      padding-right: 30px;
+    }
+
+    .main-body-item {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+    .main-body-item-label,
+    .main-body-item-field {
+      width: 100%;
+      &.flex {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        .search-processes {
+          flex: 1;
+        }
+      }
+      &.slider {
+        &:before,
+        &:after {
+          position: absolute;
+          top: 60%;
+          font-size: 17px;
+          opacity: 0.5;
+        }
+        &:before {
+          content: attr(min);
+        }
+        &:after {
+          content: attr(max);
+          left: 100%;
+          transform: translateX(-100%);
+        }
+
+        $tickMarksSelector: "::ng-deep .mdc-slider__tick-marks .ng-star-inserted";
+
+        @mixin defaultValueTickStyles {
+          display: block;
+          &:before {
+            position: absolute;
+            content: $defaultValue;
+            font-size: 17px;
+            opacity: 0.5;
+            top: 5px;
+            transform: translateX(-50%);
+          }
+        }
+
+        $defaultValue: "0.5";
+
+        #{$tickMarksSelector} {
+          display: none;
+          opacity: 1;
+          &:nth-child(51) {
+            @include defaultValueTickStyles();
+          }
+        }
+
+        &.gamma {
+          $defaultValue: "1";
+          #{$tickMarksSelector} {
+            display: none;
+            &:nth-child(61) {
+              @include defaultValueTickStyles();
+            }
+          }
+        }
+      }
+    }
+    .main-body-item-label {
+      &.left {
+        padding-left: 10px;
+      }
+      &.slider {
+        padding-left: 20px;
+      }
+    }
+  }
+
+  .main-footer {
+    @include mat.theme(
+      (
+        color: mat.$yellow-palette,
+      )
+    );
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 20px 30px;
+  }
+}

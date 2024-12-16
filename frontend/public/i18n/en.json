@@ -1,0 +1,36 @@
+{
+    "COMMON": {
+        "LOADING": "Loading",
+        "OPEN": "Open",
+        "CLOSE": "Close",
+        "CANCEL": "Cancel"
+    },
+    "HEADER": {
+        "LEARN_MORE": "Learn more",
+        "CHECK_VERSION": "Check for update",
+        "QUIT": "Quit",
+        "NEW_VERSION_DIALOG": {
+            "HEADER": "New version available",
+            "NO_UPDATES": "No updates available"
+        }
+    },
+    "MAIN": {
+        "TITLE": "Screen Tune",
+        "FIELDS": {
+            "AUTO_LAUNCH": "Autostart with Windows",
+            "LAUNCH_MINIMIZED": "Launch minimized",
+            "CHECK_UPDATES": "Check for updates",
+            "DISPLAYS": "Displays",
+            "PROCESS": {
+                "ADD": "Add application",
+                "FROM_LIST": "From list",
+                "FROM_FILE": "From file"
+            },
+            "BRIGHTNESS": "Brightness",
+            "CONTRAST": "Contrast",
+            "GAMMA": "Gamma",
+            "LIVE_PREVIEW": "Live preview"
+        },
+        "SAVE_MESSAGE": "Settings saved"
+    }
+}
