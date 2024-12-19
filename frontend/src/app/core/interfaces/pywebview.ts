@@ -17,6 +17,6 @@ export interface IPyWebViewApi {
   get_autorun: () => Promise<boolean>;
   get_app_version: () => Promise<string>;
   check_latest_release: () => Promise<IVersionCheckResponse>;
-  set_live_preview_values: (values: IConfigApplication) => Promise<void>;
   set_live_preview_active: (active: boolean) => Promise<void>;
+  set_live_preview_values: (values: IConfigApplication) => Promise<void>;
 }

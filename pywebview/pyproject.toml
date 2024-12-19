@@ -7,9 +7,5 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-dependencies = [
-    "requests>=2.25.1",
-    "numpy>=1.21.0"
-]
 requires-python = ">=3.11"
 urls = {Homepage = "https://github.com/Quenary/screen-tune"}

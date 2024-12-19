@@ -37,12 +37,14 @@ export class PywebviewApiService extends AppApiService {
     return from(this.api.get_active_window_process());
   }
 
-  @isPywebview(() => of(<IConfig>{
-    checkUpdates: true,
-    launchMinimized: false,
-    displays: [],
-    applications: {},
-  }))
+  @isPywebview(() =>
+    of(<IConfig>{
+      checkUpdates: true,
+      launchMinimized: false,
+      displays: [],
+      applications: {},
+    })
+  )
   public override getConfig(): Observable<IConfig> {
     return from(this.api.get_config());
   }
@@ -52,9 +54,7 @@ export class PywebviewApiService extends AppApiService {
     return from(this.api.set_config(config));
   }
 
-  @isPywebview(() =>
-    of(null)
-  )
+  @isPywebview(() => of(null))
   public override updateConfig(config: Partial<IConfig>): Observable<void> {
     return from(this.api.update_config(config));
   }
@@ -80,14 +80,14 @@ export class PywebviewApiService extends AppApiService {
   }
 
   @isPywebview(() => of(null))
+  public override setLivePreviewActive(active: boolean): Observable<void> {
+    return from(this.api.set_live_preview_active(active));
+  }
+
+  @isPywebview(() => of(null))
   public override setLivePreviewValues(
     values: IConfigApplication
   ): Observable<void> {
     return from(this.api.set_live_preview_values(values));
-  }
-
-  @isPywebview(() => of(null))
-  public override setLivePreviewActive(active: boolean): Observable<void> {
-    return from(this.api.set_live_preview_active(active));
   }
 }

@@ -54,15 +54,15 @@ export abstract class AppApiService {
    */
   public abstract check_latest_release(): Observable<IVersionCheckResponse>;
   /**
+   * Set live preview active flag
+   * @param active
+   */
+  public abstract setLivePreviewActive(active: boolean): Observable<void>;
+  /**
    * Set application live preview values
    * @param values
    */
   public abstract setLivePreviewValues(
     values: IConfigApplication
   ): Observable<void>;
-  /**
-   * Set live preview active flag
-   * @param active
-   */
-  public abstract setLivePreviewActive(active: boolean): Observable<void>;
 }
