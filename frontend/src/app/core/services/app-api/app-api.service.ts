@@ -5,6 +5,7 @@ import { IVersionCheckResponse } from '../../interfaces/version-check';
 
 @Injectable()
 export abstract class AppApiService {
+  public readonly abstract isApiReady$: Observable<boolean>;
   /**
    * Get list of display names
    */

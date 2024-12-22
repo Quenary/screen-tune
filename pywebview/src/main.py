@@ -10,6 +10,7 @@ from env import Env
 from event_handler import EventHandler
 from multiprocessing import Process
 import atexit
+from darkdetect import isDark
 
 _env = Env()
 _config = Config(_env)
@@ -17,13 +18,21 @@ _autorun_manager = AutorunManager(_env)
 _gdi32_wrapper = Gdi32Wrapper()
 _event_handler = EventHandler(_gdi32_wrapper, _config)
 _event_handler.start()
-_api = Api(_env, _config, _autorun_manager, _event_handler)
+_api = Api(_env, _config, _autorun_manager, _event_handler, lambda: clean_up())
 
 
 def start_webview():
     """Create and open main window"""
-    webview.create_window(_env.DISPLAYED_APP_NAME,_env.INDEX_PATH, js_api=_api)
-    webview.start()
+    webview.create_window(
+        _env.DISPLAYED_APP_NAME,
+        _env.INDEX_PATH,
+        js_api=_api,
+        width=960,
+        height=720,
+        min_size=(640, 480),
+        background_color="#000000" if isDark() else "#ffffff",
+    )
+    webview.start(icon=_env.ICON_PATH, debug=True)
 
 
 def icon_on_open(icon, item):

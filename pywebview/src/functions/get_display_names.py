@@ -11,7 +11,7 @@ class DISPLAY_DEVICE(ctypes.Structure):
         ("DeviceKey", wintypes.WCHAR * 128),
     ]
 
-DISPLAY_DEVICE_ACTIVE = 0x00000001  # Флаг активного дисплея
+DISPLAY_DEVICE_ACTIVE = 0x00000001  # Active display flag
 
 def get_display_names():
     user32 = ctypes.WinDLL("user32", use_last_error=True)
@@ -27,13 +27,9 @@ def get_display_names():
         if not EnumDisplayDevicesW(None, i, ctypes.byref(device), 0):
             break
 
-        # Проверяем флаг активности дисплея
+        # Check if the display is active
         if device.StateFlags & DISPLAY_DEVICE_ACTIVE:
             active_displays.append(device.DeviceName)
         i += 1
 
     return active_displays
-
-# Пример использования
-# active_display_names = get_active_display_names()
-# print("Active Display Names:", active_display_names)

@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
-import { AppApiService } from './app-api.interface';
-import { from, Observable, of } from 'rxjs';
+import { AppApiService } from './app-api.service';
+import {
+  from,
+  fromEvent,
+  map,
+  Observable,
+  of,
+  shareReplay,
+  take,
+  timeout,
+} from 'rxjs';
 import { IPyWebViewApi } from '../../interfaces/pywebview';
 import { IConfig, IConfigApplication } from '../../interfaces/config';
 import { isPywebview } from '../../decorators/is-pywebview.decorator';
@@ -8,6 +17,13 @@ import { IVersionCheckResponse } from '../../interfaces/version-check';
 
 @Injectable()
 export class PywebviewApiService extends AppApiService {
+  public readonly isApiReady$ = fromEvent(window, 'isApiReady').pipe(
+    map(() => true),
+    timeout({ each: 1000, with: () => of(true) }),
+    take(1),
+    shareReplay(1)
+  );
+
   protected get api(): IPyWebViewApi {
     return window.pywebview.api;
   }

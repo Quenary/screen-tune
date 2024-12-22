@@ -17,11 +17,13 @@ class Api:
         config: Config,
         autorun_manager: AutorunManager,
         event_handler: EventHandler,
+        on_exit: callable,
     ):
         self._env = env
         self._config = config
         self._autorun_manager = autorun_manager
         self._event_handler = event_handler
+        self._on_exit = on_exit
 
     def get_display_names(self) -> list:
         return get_display_names()
@@ -33,7 +35,10 @@ class Api:
         return webbrowser.open(url)
 
     def exit(self) -> None:
-        return webview.active_window().destroy()
+        # TODO добавить полный выход из приложения
+        webview.active_window().destroy()
+        self._on_exit()
+        return None
 
     def get_active_window_process(self) -> str:
         return get_active_window_process_name()

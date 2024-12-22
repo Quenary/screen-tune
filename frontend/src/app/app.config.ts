@@ -17,7 +17,7 @@ import { LOCATION_INITIALIZED } from '@angular/common';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { AppApiService } from './core/services/app-api/app-api.interface';
+import { AppApiService } from './core/services/app-api/app-api.service';
 import { PywebviewApiService } from './core/services/app-api/pywebview-api.service';
 
 function TranslateInitializerFactory(environmentInjector: EnvironmentInjector) {

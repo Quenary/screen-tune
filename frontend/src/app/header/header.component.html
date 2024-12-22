@@ -1,5 +1,5 @@
 <div class="HeaderClass">
-  <button mat-button [matMenuTriggerFor]="menu">
+  <button mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>menu</mat-icon>
   </button>
 </div>
@@ -13,7 +13,7 @@
     <mat-icon>refresh</mat-icon>
     {{ "HEADER.CHECK_VERSION" | translate }}
   </button>
-  <button mat-menu-item (click)="quit()">
+  <button mat-menu-item (click)="exit()">
     <mat-icon>logout</mat-icon>
     {{ "HEADER.QUIT" | translate }}
   </button>

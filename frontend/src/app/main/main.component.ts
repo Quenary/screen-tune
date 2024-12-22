@@ -16,12 +16,13 @@ import {
   skip,
   startWith,
   Subject,
+  switchMap,
   take,
   takeUntil,
   tap,
 } from 'rxjs';
 import { IConfig, IConfigApplication } from '../core/interfaces/config';
-import { AppApiService } from '../core/services/app-api/app-api.interface';
+import { AppApiService } from '../core/services/app-api/app-api.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
@@ -63,7 +64,7 @@ const configSaveInterval: number = 2000;
     MatFormFieldModule,
     MatSliderModule,
     MatSelectModule,
-    
+
     MatProgressSpinnerModule,
     MatChipsModule,
     MatDividerModule,
@@ -82,7 +83,9 @@ export class MainComponent {
   /**
    * Version of application
    */
-  public readonly appVersion$ = this.appApiService.getAppVersion();
+  public readonly appVersion$ = this.appApiService.isApiReady$.pipe(
+    switchMap(() => this.appApiService.getAppVersion())
+  );
   /**
    * Indicates delay before auto save config
    */
@@ -193,23 +196,29 @@ export class MainComponent {
 
   ngOnInit(): void {
     this.isLoading$.next(true);
-    forkJoin([
-      this.appApiService.getDisplayNames(),
-      this.appApiService.getConfig(),
-      this.appApiService.getAutorun(),
-    ]).subscribe(([displays, config, autoLaunch]) => {
-      this.autoLaunchControl.setValue(autoLaunch);
-      this.launchMinimizedControl.setValue(config.launchMinimized);
-      this.checkUpdatesControl.setValue(config.checkUpdates);
-      this.displaysList = displays;
-      this.config$.next(config);
-      this.searchApplicationControl.setValue(null);
-      this.displaysControl.setValue(
-        !!config?.displays?.length ? config.displays : []
-      );
-      this.initChangesManagement();
-      this.isLoading$.next(false);
-    });
+    this.appApiService.isApiReady$
+      .pipe(
+        switchMap(() =>
+          forkJoin([
+            this.appApiService.getDisplayNames(),
+            this.appApiService.getConfig(),
+            this.appApiService.getAutorun(),
+          ])
+        )
+      )
+      .subscribe(([displays, config, autoLaunch]) => {
+        this.autoLaunchControl.setValue(autoLaunch);
+        this.launchMinimizedControl.setValue(config.launchMinimized);
+        this.checkUpdatesControl.setValue(config.checkUpdates);
+        this.displaysList = displays;
+        this.config$.next(config);
+        this.searchApplicationControl.setValue(null);
+        this.displaysControl.setValue(
+          !!config?.displays?.length ? config.displays : []
+        );
+        this.initChangesManagement();
+        this.isLoading$.next(false);
+      });
   }
 
   /**

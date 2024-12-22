@@ -3,9 +3,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { EAppUrls } from '../core/enums/app-urls.enum';
-import { AppApiService } from '../core/services/app-api/app-api.interface';
+import { AppApiService } from '../core/services/app-api/app-api.service';
 import { NewVersionDialogComponent } from '../new-version-dialog/new-version-dialog.component';
-import { MatButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -14,7 +14,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   selector: 'app-header',
   imports: [
     TranslateModule,
-    MatButton,
+    MatButtonModule,
     MatMenuModule,
     MatIcon,
     MatDialogModule,
@@ -56,7 +56,7 @@ export class HeaderComponent {
     });
   }
 
-  public quit() {
+  public exit() {
     this.appApiService.exit();
   }
 }

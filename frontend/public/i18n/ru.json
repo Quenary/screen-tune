@@ -8,7 +8,7 @@
     "HEADER": {
         "LEARN_MORE": "Подробнее о приложении",
         "CHECK_VERSION": "Проверить наличие обновлений",
-        "QUIT": "Закрыть",
+        "QUIT": "Выйти",
         "NEW_VERSION_DIALOG": {
             "HEADER": "Доступна новая версия",
             "NO_UPDATES": "Обновлений нет"
