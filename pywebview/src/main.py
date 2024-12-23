@@ -1,6 +1,5 @@
 from PIL import Image
 from pystray import Icon, Menu, MenuItem
-import webview
 from api import Api
 import webbrowser
 from autorun_manager import AutorunManager
@@ -8,60 +7,48 @@ from gdi32_wrapper import Gdi32Wrapper
 from config import Config
 from env import Env
 from event_handler import EventHandler
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 import atexit
-from darkdetect import isDark
+import time
+import json
+from threading import Thread, Event
+from main_window import create_main_window
 
 _env = Env()
 _config = Config(_env)
 _autorun_manager = AutorunManager(_env)
 _gdi32_wrapper = Gdi32Wrapper()
 _event_handler = EventHandler(_gdi32_wrapper, _config)
-_event_handler.start()
 _api = Api(_env, _config, _autorun_manager, _event_handler, lambda: clean_up())
 
+window_request_queue = Queue()
+window_response_queue = Queue()
+webview_process: Process = None
 
-def start_webview():
-    """Create and open main window"""
-    webview.create_window(
-        _env.DISPLAYED_APP_NAME,
-        _env.INDEX_PATH,
-        js_api=_api,
-        width=960,
-        height=720,
-        min_size=(640, 480),
-        background_color="#000000" if isDark() else "#ffffff",
-    )
-    webview.start(icon=_env.ICON_PATH, debug=True)
+clean_up_event = Event()
 
 
-def icon_on_open(icon, item):
+def open_main_window():
+    """Check if main window is presented and open it if not"""
     global webview_process
     if webview_process is None or not webview_process.is_alive():
-        webview_process = Process(target=start_webview)
+        webview_process = Process(
+            target=create_main_window,
+            args=(
+                window_request_queue,
+                window_response_queue,
+                _env.DISPLAYED_APP_NAME,
+                _env.INDEX_PATH,
+                _env.ICON_PATH,
+            ),
+        )
         webview_process.start()
-
-
-def icon_on_exit(icon, item):
-    clean_up()
-
-
-image = Image.open(_env.ICON_PATH)
-menu = Menu(
-    MenuItem(_env.DISPLAYED_APP_NAME, None, enabled=False),
-    MenuItem("Open", icon_on_open),
-    MenuItem(
-        "Learn more",
-        lambda: webbrowser.open("https://github.com/Quenary/screen-tune"),
-    ),
-    MenuItem("Exit", icon_on_exit),
-)
-icon = Icon(_env.DISPLAYED_APP_NAME, image, menu=menu)
-
 
 def clean_up():
     """Exit program clean-up"""
     _event_handler.stop()
+    global clean_up_event
+    clean_up_event.set()
     try:
         global webview_process
         if webview_process is not None and webview_process.is_alive():
@@ -71,14 +58,50 @@ def clean_up():
         pass
     icon.stop()
 
+image = Image.open(_env.ICON_PATH)
+menu = Menu(
+    MenuItem(_env.DISPLAYED_APP_NAME, None, enabled=False),
+    MenuItem("Open", lambda: open_main_window()),
+    MenuItem(
+        "Learn more",
+        lambda: webbrowser.open("https://github.com/Quenary/screen-tune"),
+    ),
+    MenuItem("Exit", lambda: clean_up()),
+)
+icon = Icon(_env.DISPLAYED_APP_NAME, image, menu=menu)
+
+
+def listen_invokes(stop_event: Event):
+    """Listen window invokes and call api methods"""
+    while stop_event.is_set() is False:
+        if not window_request_queue.empty():
+            message = json.loads(window_request_queue.get())
+            print(message)
+            result = None
+            if hasattr(_api, message["method"]):
+                method = getattr(_api, message["method"])
+                print(method)
+                result = method(*message["args"])
+                print(result)
+            window_response_queue.put(json.dumps(result))
+        time.sleep(0.1)
+
 
 if __name__ == "__main__":
-    global webview_process
-    if not _config.get_config()["launchMinimized"]:
-        webview_process = Process(target=start_webview)
-        webview_process.start()
+    config = _config.get_config()
+    if not config["launchMinimized"]:
+        open_main_window()
+        
+    if config["isWorkerActive"]:
+        _event_handler.stop()
 
+    invokes_thread = Thread(
+        target=listen_invokes, args=(clean_up_event,)
+    )
+    invokes_thread.start()
+    
     atexit.register(clean_up)
+    
     try:
         icon.run()
     except KeyboardInterrupt:

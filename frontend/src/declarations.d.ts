@@ -3,6 +3,8 @@ import { IPyWebView } from './app/core/interfaces/pywebview';
 
 declare global {
   interface Window {
-    pywebview: IPyWebView;
+    pywebview: {
+      api: TPywebviewApi;
+    };
   }
 }

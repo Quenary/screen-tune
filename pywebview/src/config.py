@@ -10,11 +10,11 @@ from env import Env
 
 class ConfigDict(TypedDict):
     """Configuration dictionary"""
-
     checkUpdates: bool
     launchMinimized: bool
     displays: List[str]
     applications: dict
+    isWorkerActive: bool
 
 
 class Config:
@@ -42,6 +42,7 @@ class Config:
             "launchMinimized": False,
             "displays": [],
             "applications": {},
+            "isWorkerActive": True
         }
 
     def __del__(self):

@@ -10,6 +10,7 @@ import {
   BehaviorSubject,
   combineLatest,
   debounceTime,
+  finalize,
   forkJoin,
   from,
   map,
@@ -30,7 +31,6 @@ import {
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 import {
-  MatSlideToggle,
   MatSlideToggleChange,
   MatSlideToggleModule,
 } from '@angular/material/slide-toggle';
@@ -64,7 +64,6 @@ const configSaveInterval: number = 2000;
     MatFormFieldModule,
     MatSliderModule,
     MatSelectModule,
-
     MatProgressSpinnerModule,
     MatChipsModule,
     MatDividerModule,
@@ -204,20 +203,24 @@ export class MainComponent {
             this.appApiService.getConfig(),
             this.appApiService.getAutorun(),
           ])
-        )
+        ),
+        finalize(() => {
+          this.isLoading$.next(false);
+        }),
       )
-      .subscribe(([displays, config, autoLaunch]) => {
-        this.autoLaunchControl.setValue(autoLaunch);
-        this.launchMinimizedControl.setValue(config.launchMinimized);
-        this.checkUpdatesControl.setValue(config.checkUpdates);
-        this.displaysList = displays;
-        this.config$.next(config);
-        this.searchApplicationControl.setValue(null);
-        this.displaysControl.setValue(
-          !!config?.displays?.length ? config.displays : []
-        );
-        this.initChangesManagement();
-        this.isLoading$.next(false);
+      .subscribe({
+        next: ([displays, config, autoLaunch]) => {
+          this.autoLaunchControl.setValue(autoLaunch);
+          this.launchMinimizedControl.setValue(config.launchMinimized);
+          this.checkUpdatesControl.setValue(config.checkUpdates);
+          this.displaysList = displays;
+          this.config$.next(config);
+          this.searchApplicationControl.setValue(null);
+          this.displaysControl.setValue(
+            !!config?.displays?.length ? config.displays : []
+          );
+          this.initChangesManagement();
+        },
       });
   }
 

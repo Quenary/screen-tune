@@ -49,11 +49,3 @@ class Env:
     @property
     def HOME_PAGE(self) -> str:
         return self._home_page
-
-
-env = Env()
-print(env.DISPLAYED_APP_NAME)
-print(env.APP_NAME)
-print(env.VERSION)
-print(env.HOME_PAGE)
-print(env.ICON_PATH)

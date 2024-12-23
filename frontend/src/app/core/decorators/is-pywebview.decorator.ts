@@ -12,7 +12,7 @@ export function isPywebview(fallback?: Function) {
   ) {
     const original = descriptor.value;
     descriptor.value = function (...args: any[]) {
-      if (!window?.pywebview?.api) {
+      if (!window?.pywebview) {
         console.warn(
           `${this?.constructor?.name}[${propertyKey}] decorated with @isPywebview cannot be called because electron is missing in global object.`
         );

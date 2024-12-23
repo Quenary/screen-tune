@@ -7,7 +7,7 @@ import { AppApiService } from '../core/services/app-api/app-api.service';
 import { NewVersionDialogComponent } from '../new-version-dialog/new-version-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatIcon } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
@@ -16,7 +16,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
     TranslateModule,
     MatButtonModule,
     MatMenuModule,
-    MatIcon,
+    MatIconModule,
     MatDialogModule,
     MatSnackBarModule,
   ],

@@ -10,7 +10,7 @@ import {
   take,
   timeout,
 } from 'rxjs';
-import { IPyWebViewApi } from '../../interfaces/pywebview';
+import { TPywebviewApi } from '../../interfaces/pywebview';
 import { IConfig, IConfigApplication } from '../../interfaces/config';
 import { isPywebview } from '../../decorators/is-pywebview.decorator';
 import { IVersionCheckResponse } from '../../interfaces/version-check';
@@ -24,33 +24,33 @@ export class PywebviewApiService extends AppApiService {
     shareReplay(1)
   );
 
-  protected get api(): IPyWebViewApi {
+  protected get api():TPywebviewApi {
     return window.pywebview.api;
   }
 
   @isPywebview(() => of(['DISPLAY_1', 'DISPLAY_2']))
   public override getDisplayNames(): Observable<string[]> {
-    return from(this.api.get_display_names());
+    return from(this.api.invoke('get_display_names'));
   }
 
   @isPywebview(() => of(['code.exe', 'notepad.exe']))
   public override getProcessNames(): Observable<string[]> {
-    return from(this.api.get_process_names());
+    return from(this.api.invoke('get_process_names'));
   }
 
   @isPywebview(() => of(null))
   public override openExternalUrl(url: string): Observable<void> {
-    return from(this.api.open_external_url(url));
+    return from(this.api.invoke('open_external_url', url));
   }
 
   @isPywebview(() => of(null))
   public override exit(): Observable<void> {
-    return from(this.api.exit());
+    return from(this.api.invoke('exit'));
   }
 
   @isPywebview(() => of(null))
   public override getActiveWindowProcess(): Observable<string> {
-    return from(this.api.get_active_window_process());
+    return from(this.api.invoke('get_active_window_process'));
   }
 
   @isPywebview(() =>
@@ -62,48 +62,48 @@ export class PywebviewApiService extends AppApiService {
     })
   )
   public override getConfig(): Observable<IConfig> {
-    return from(this.api.get_config());
+    return from(this.api.invoke('get_config'));
   }
 
   @isPywebview(() => of(null))
   public override setConfig(config: IConfig): Observable<void> {
-    return from(this.api.set_config(config));
+    return from(this.api.invoke('set_config', config));
   }
 
   @isPywebview(() => of(null))
   public override updateConfig(config: Partial<IConfig>): Observable<void> {
-    return from(this.api.update_config(config));
+    return from(this.api.invoke('update_config', config));
   }
 
   @isPywebview(() => of(null))
   public override setAutorun(flag: boolean): Observable<void> {
-    return from(this.api.set_autorun(flag));
+    return from(this.api.invoke('set_autorun', flag));
   }
 
   @isPywebview(() => of(false))
   public override getAutorun(): Observable<boolean> {
-    return from(this.api.get_autorun());
+    return from(this.api.invoke('get_autorun'));
   }
 
   @isPywebview(() => of('0.0.0'))
   public override getAppVersion(): Observable<string> {
-    return from(this.api.get_app_version());
+    return from(this.api.invoke('get_app_version'));
   }
 
   @isPywebview(() => of(null))
   public override check_latest_release(): Observable<IVersionCheckResponse> {
-    return from(this.api.check_latest_release());
+    return from(this.api.invoke('check_latest_release'));
   }
 
   @isPywebview(() => of(null))
   public override setLivePreviewActive(active: boolean): Observable<void> {
-    return from(this.api.set_live_preview_active(active));
+    return from(this.api.invoke('set_live_preview_active', active));
   }
 
   @isPywebview(() => of(null))
   public override setLivePreviewValues(
     values: IConfigApplication
   ): Observable<void> {
-    return from(this.api.set_live_preview_values(values));
+    return from(this.api.invoke('set_live_preview_values', values));
   }
 }

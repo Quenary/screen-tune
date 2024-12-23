@@ -7,7 +7,6 @@ from functions.get_display_names import get_display_names
 from functions.get_process_names import get_process_names
 from functions.check_latest_release import check_latest_release
 from env import Env
-import webview
 
 
 class Api:
@@ -35,8 +34,6 @@ class Api:
         return webbrowser.open(url)
 
     def exit(self) -> None:
-        # TODO добавить полный выход из приложения
-        webview.active_window().destroy()
         self._on_exit()
         return None
 
@@ -74,3 +71,13 @@ class Api:
 
     def set_live_preview_values(self, values: ConfigDict) -> None:
         return self._event_handler.set_live_preview_values(values)
+    
+    def is_worker_active(self) -> bool:
+        return self._event_handler.is_running()
+    
+    def toggle_worker(self) -> None:
+        is_running = self._event_handler.is_running()
+        if is_running:
+            self._event_handler.stop()
+        else:
+            self._event_handler.stop()

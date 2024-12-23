@@ -23,6 +23,7 @@ class EventHandler:
         self._config_subscription: Disposable = None
         self._live_preview_active = BehaviorSubject(False)
         self._live_preview_values = BehaviorSubject(None)
+        self._running = BehaviorSubject(False)
 
     def stop(self):
         if self._interval_subscription is not None:
@@ -31,6 +32,7 @@ class EventHandler:
             self._live_preview_subscription.dispose()
         if self._config_subscription is not None:
             self._config_subscription.dispose()
+        self._running.on_next(False)
 
     def start(self):
         self.stop()
@@ -45,6 +47,7 @@ class EventHandler:
         self._config_subscription = self._config.observe_config().subscribe(
             lambda x: self._on_next_config()
         )
+        self._running.on_next(True)
 
     def _on_next_interval(self):
         live_preview_active = self._live_preview_active.value
@@ -105,7 +108,7 @@ class EventHandler:
             )
             ramp: dict = self._gdi32_wrapper.get_flat_ramp(ramp_values)
             for display in displays:
-                print(f"Setting gamma ramp for display: {display}")
+                # print(f"Setting gamma ramp for display: {display}")
                 self._gdi32_wrapper.set_device_gamma_ramp(display, ramp)
         except:
             pass
@@ -119,3 +122,9 @@ class EventHandler:
 
     def set_live_preview_values(self, values: dict):
         self._live_preview_values.on_next(values)
+        
+    def is_running(self):
+        return self._running.value
+    
+    def is_running_observer(self):
+        return self._running.as_observer()
