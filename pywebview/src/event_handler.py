@@ -1,8 +1,5 @@
-from gdi32_wrapper import Gdi32Wrapper
+from platform_api import PlatformApi
 from config import Config, ConfigDict
-from functions.get_active_window_process_name import (
-    get_active_window_process_name,
-)
 from rx import interval, combine_latest
 from rx.operators import throttle_first
 from rx.disposable.disposable import Disposable
@@ -10,8 +7,8 @@ from rx.subject.behaviorsubject import BehaviorSubject
 
 
 class EventHandler:
-    def __init__(self, gdi32_wrapper: Gdi32Wrapper, config: Config):
-        self._gdi32_wrapper = gdi32_wrapper
+    def __init__(self, platform_api: PlatformApi, config: Config):
+        self._platform_api = platform_api
         self._config = config
         self._interval = 1
         self._default_brightness: float = 0.5
@@ -56,7 +53,7 @@ class EventHandler:
         config: ConfigDict = self._config.get_config()
         if config is None:
             return
-        active_window_process = get_active_window_process_name()
+        active_window_process = self._platform_api.get_active_window_process_name()
         if self._active_window_process == active_window_process:
             return
         self._active_window_process = active_window_process
@@ -103,13 +100,10 @@ class EventHandler:
             )
             contrast = contrast if contrast is not None else self._default_contrast
             gamma = gamma if gamma is not None else self._default_gamma
-            ramp_values: list = self._gdi32_wrapper.calculate_ramp_values(
-                brightness, contrast, gamma
-            )
-            ramp: dict = self._gdi32_wrapper.get_flat_ramp(ramp_values)
             for display in displays:
-                # print(f"Setting gamma ramp for display: {display}")
-                self._gdi32_wrapper.set_device_gamma_ramp(display, ramp)
+                self._platform_api.set_display_settings(
+                    display, brightness, contrast, gamma
+                )
         except:
             pass
 

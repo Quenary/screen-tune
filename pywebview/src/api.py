@@ -2,11 +2,10 @@ from config import Config, ConfigDict
 from autorun_manager import AutorunManager
 from event_handler import EventHandler
 import webbrowser
-from functions.get_active_window_process_name import get_active_window_process_name
-from functions.get_display_names import get_display_names
 from functions.get_process_names import get_process_names
 from functions.check_latest_release import check_latest_release
 from env import Env
+from platform_api import PlatformApi
 
 
 class Api:
@@ -15,17 +14,19 @@ class Api:
         env: Env,
         config: Config,
         autorun_manager: AutorunManager,
+        platform_api: PlatformApi,
         event_handler: EventHandler,
         on_exit: callable,
     ):
         self._env = env
         self._config = config
         self._autorun_manager = autorun_manager
+        self._platform_api = platform_api
         self._event_handler = event_handler
         self._on_exit = on_exit
 
     def get_display_names(self) -> list:
-        return get_display_names()
+        return self._platform_api.get_display_names()
 
     def get_process_names(self) -> list:
         return get_process_names()
@@ -38,7 +39,7 @@ class Api:
         return None
 
     def get_active_window_process(self) -> str:
-        return get_active_window_process_name()
+        return self._platform_api.get_active_window_process_name()
 
     def get_config(self) -> ConfigDict:
         return self._config.get_config()
