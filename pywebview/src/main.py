@@ -2,7 +2,6 @@ from PIL import Image
 from pystray import Icon, Menu, MenuItem
 from api import Api
 import webbrowser
-from autorun_manager import AutorunManager
 from platform_api import PLATFORM_API
 from config import Config
 from env import Env
@@ -16,11 +15,10 @@ from main_window import create_main_window, InvokeParams
 
 _env = Env()
 _config = Config(_env)
-_autorun_manager = AutorunManager(_env)
-_platform_api = PLATFORM_API()
+_platform_api = PLATFORM_API(_env)
 _event_handler = EventHandler(_platform_api, _config)
 _api = Api(
-    _env, _config, _autorun_manager, _platform_api, _event_handler, lambda: clean_up()
+    _env, _config, _platform_api, _event_handler, lambda: clean_up()
 )
 
 window_request_queue = Queue()

@@ -4,10 +4,16 @@ from Xlib.ext import record
 from Xlib.protocol import rq
 import psutil
 from . import PlatformApi
+from env import Env
+import os
 
 
 class LinuxApi(PlatformApi):
     """Wrapper for Linux functionality using xrandr and Xlib."""
+    
+    def __init__(self, env: Env):
+        self._env = env
+        self.desktop_file_path = os.path.expanduser(f"~/.config/autostart/{self._env.APP_NAME}.desktop")
     
     def set_display_settings(self, display_name: str, gamma: float, *args, **kwargs):
         try:
@@ -45,3 +51,44 @@ class LinuxApi(PlatformApi):
         except Exception as e:
             print(f"Error getting active window process name: {e}")
             return None
+        
+    def _get_executable_path(self) -> str:
+        return os.path.abspath(self._env.APP_EXECUTABLE or os.sys.executable)
+
+    def _generate_desktop_entry(self) -> str:
+        executable_path = self._get_executable_path()
+        return f"""[Desktop Entry]
+Type=Application
+Name={self._env.APP_NAME}
+Exec={executable_path}
+X-GNOME-Autostart-enabled=true
+"""
+
+    def _update_autorun_path(self) -> None:
+        if os.path.exists(self.desktop_file_path):
+            with open(self.desktop_file_path, "r") as file:
+                content = file.read()
+                if f"Exec={self._get_executable_path()}" not in content:
+                    print("Updating autorun path...")
+                    self.enable_autorun()
+
+    def enable_autorun(self) -> None:
+        os.makedirs(os.path.dirname(self.desktop_file_path), exist_ok=True)
+        with open(self.desktop_file_path, "w") as file:
+            file.write(self._generate_desktop_entry())
+        print(f"Autorun enabled: {self.desktop_file_path}")
+
+    def disable_autorun(self) -> None:
+        try:
+            os.remove(self.desktop_file_path)
+            print("Autorun disabled.")
+        except FileNotFoundError:
+            print("Autorun file not found while disabling.")
+
+    def is_autorun_enabled(self) -> bool:
+        if not os.path.exists(self.desktop_file_path):
+            return False
+
+        with open(self.desktop_file_path, "r") as file:
+            content = file.read()
+            return f"Exec={self._get_executable_path()}" in content

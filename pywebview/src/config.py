@@ -1,5 +1,4 @@
 import json
-import os.path
 import copy
 from rx.subject.behaviorsubject import BehaviorSubject
 from rx.operators import map, skip, debounce

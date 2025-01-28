@@ -1,5 +1,4 @@
 from config import Config, ConfigDict
-from autorun_manager import AutorunManager
 from event_handler import EventHandler
 import webbrowser
 from functions.get_process_names import get_process_names
@@ -13,14 +12,12 @@ class Api:
         self,
         env: Env,
         config: Config,
-        autorun_manager: AutorunManager,
         platform_api: PlatformApi,
         event_handler: EventHandler,
         on_exit: callable,
     ):
         self._env = env
         self._config = config
-        self._autorun_manager = autorun_manager
         self._platform_api = platform_api
         self._event_handler = event_handler
         self._on_exit = on_exit
@@ -52,12 +49,12 @@ class Api:
 
     def set_autorun(self, flag: bool) -> None:
         if flag:
-            self._autorun_manager.enable_autorun()
+            self._platform_api.enable_autorun()
         else:
-            self._autorun_manager.disable_autorun()
+            self._platform_api.disable_autorun()
 
     def get_autorun(self) -> bool:
-        return self._autorun_manager.is_autorun_enabled()
+        return self._platform_api.is_autorun_enabled()
 
     def get_app_version(self) -> str:
         return self._env.VERSION

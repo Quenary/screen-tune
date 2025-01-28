@@ -1,8 +1,13 @@
 import sys
 from abc import ABC, abstractmethod
+from env import Env
 
 
 class PlatformApi(ABC):
+    @abstractmethod
+    def __init__(self, env: Env):
+        pass
+    
     @abstractmethod
     def set_display_settings(
         self, display_name: str, brightness: float, contrast: float, gamma: float
@@ -18,6 +23,21 @@ class PlatformApi(ABC):
     @abstractmethod
     def get_active_window_process_name(self) -> str:
         """Get process name of active window"""
+        pass
+    
+    @abstractmethod
+    def enable_autorun(self):
+        """Enable autorun on system startup"""
+        pass
+    
+    @abstractmethod
+    def disable_autorun(self):
+        """Disable autorun on system startup"""
+        pass
+    
+    @abstractmethod
+    def is_autorun_enabled(self) -> bool:
+        """Check if autorun is enabled"""
         pass
 
 
