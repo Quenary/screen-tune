@@ -10,7 +10,7 @@ class Env:
         if hasattr(sys, "_MEIPASS"):
             self._toml_path = os.path.join(sys._MEIPASS, "pyproject.toml")
             self._index_path = os.path.join(sys._MEIPASS, "frontend", "index.html")
-            self._icon_path = os.path.join(sys._MEIPASS, "icon.png")
+            self._icon_path = os.path.join(sys._MEIPASS, "assets", "icon.png")
         else:
             dirname = os.path.dirname(__file__)
             self._index_path = "http://localhost:4200/"
