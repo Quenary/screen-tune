@@ -111,14 +111,14 @@ if __name__ == "__main__":
     menu = Menu(
         MenuItem(_env.DISPLAYED_APP_NAME, None, enabled=False),
         Menu.SEPARATOR,
-        MenuItem("Open", lambda: open_main_window()),
+        MenuItem("Open", lambda: open_main_window(), default=True),
         MenuItem(
             "Learn more",
             lambda: webbrowser.open("https://github.com/Quenary/screen-tune"),
         ),
         MenuItem("Exit", lambda: clean_up()),
     )
-    icon = Icon(_env.DISPLAYED_APP_NAME, image, menu=menu)
+    icon = Icon(_env.DISPLAYED_APP_NAME, image, title=_env.DISPLAYED_APP_NAME, menu=menu)
 
     config = _config.get_config()
     if not config["launchMinimized"]:

@@ -1,6 +1,6 @@
 [project]
 name = "screen-tune"
-version = "1.2.3"
+version = "1.0.0"
 description = "App provides controls over PC displays color settings (brightness, contrast, gamma) depending on active window."
 authors = [
     {name = "Eugene Savin", email = "evgeny.savin.ad@gmail.com"}

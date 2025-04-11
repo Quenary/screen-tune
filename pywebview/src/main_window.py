@@ -45,6 +45,7 @@ def run_webview(
             height=720,
             min_size=(640, 480),
             background_color="#000000" if isDark() else "#ffffff",
+            # frameless=True # not resizable
         )
 
         logging.debug("run_webview. window.expose(invoke).")
