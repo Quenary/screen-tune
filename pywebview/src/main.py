@@ -25,24 +25,24 @@ webview_process: Process = None
 
 if __name__ == "__main__":
     freeze_support()
+
+    _env = Env()
+    _config = Config(_env.CONFIG_PATH)
+
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=_config.get_config().get('logLevel'),
         format="%(asctime)s - %(levelname)s - %(message)s",
-        filename="app.log",
+        filename=_env.APP_LOG_PATH,
         encoding="utf-8",
     )
     logging.info("Starting application...")
-    
+
     clean_up_event = Event()
-    
-    _env = Env()
-    _config = Config(_env)
+
     _platform_api = PLATFORM_API(_env)
     _event_handler = EventHandler(_platform_api, _config)
-    _api = Api(
-        _env, _config, _platform_api, _event_handler, lambda: clean_up()
-    )
-    
+    _api = Api(_env, _config, _platform_api, _event_handler, lambda: clean_up())
+
     def open_main_window():
         """Check if main window is presented and open it if not"""
         try:
@@ -55,10 +55,12 @@ if __name__ == "__main__":
                         window_request_queue,
                         window_response_queue,
                         _env.DISPLAYED_APP_NAME,
+                        _env.WINDOW_LOG_PATH,
                         _env.INDEX_PATH,
                         _env.ICON_PATH,
+                        _config.get_config().get('logLevel')
                     ),
-                    name="__window__"
+                    name="__window__",
                 )
                 webview_process.start()
             else:
@@ -68,25 +70,23 @@ if __name__ == "__main__":
             logging.error(traceback.format_exc())
             pass
 
-
     def clean_up():
         """Exit program clean-up"""
         try:
             global clean_up_event
             clean_up_event.set()
-            
+
             _event_handler.stop()
-            
+
             global webview_process
             if webview_process is not None and webview_process.is_alive():
                 webview_process.terminate()
-                
+
             icon.stop()
         except Exception as e:
             logging.error(f"Error in clean_up: {e}")
             logging.error(traceback.format_exc())
             pass
-
 
     def listen_invokes(stop_event: Event):
         """Listen window invokes and call api methods"""
@@ -104,9 +104,9 @@ if __name__ == "__main__":
                     logging.error(traceback.format_exc())
                     pass
             time.sleep(0.1)
-    
+
     atexit.register(clean_up)
-    
+
     image = Image.open(_env.ICON_PATH)
     menu = Menu(
         MenuItem(_env.DISPLAYED_APP_NAME, None, enabled=False),
@@ -118,7 +118,9 @@ if __name__ == "__main__":
         ),
         MenuItem("Exit", lambda: clean_up()),
     )
-    icon = Icon(_env.DISPLAYED_APP_NAME, image, title=_env.DISPLAYED_APP_NAME, menu=menu)
+    icon = Icon(
+        _env.DISPLAYED_APP_NAME, image, title=_env.DISPLAYED_APP_NAME, menu=menu
+    )
 
     config = _config.get_config()
     if not config["launchMinimized"]:

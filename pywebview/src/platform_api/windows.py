@@ -66,11 +66,11 @@ gdi32.SetDeviceGammaRamp.restype = wintypes.BOOL
 
 class WindowsApi(PlatformApi):
     """Wrapper for Windows apis as gdi32.dll or user32.dll nessary functions."""
-    
+
     def __init__(self, env: Env):
         self._env = env
         self._registry_path = r"Software\\Microsoft\\Windows\\CurrentVersion\\Run"
-        
+
     def set_display_settings(
         self, display_name: str, brightness: float, contrast: float, gamma: float
     ) -> bool:

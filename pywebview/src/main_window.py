@@ -6,28 +6,33 @@ from darkdetect import isDark
 import logging
 import traceback
 
+
 class InvokeParams(TypedDict):
     name: str
     args: list
+
 
 def run_webview(
     request_queue: Queue,
     response_queue: Queue,
     displayed_app_name: str,
+    log_path: str,
     index_path: str,
     icon_path: str,
+    log_level: int
 ):
     """Create and open main window"""
     try:
         logging.basicConfig(
-            level=logging.DEBUG,
+            level=log_level,
             format="%(asctime)s - %(levelname)s - %(message)s",
-            filename="window.log",
+            filename=log_path,
             encoding="utf-8",
         )
         logging.info("Creating main window")
 
         logging.debug("run_webview. define invoke function.")
+
         def invoke(method, *args):
             message: InvokeParams = {"method": method, "args": args}
             request_queue.put(json.dumps(message))

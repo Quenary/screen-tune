@@ -38,5 +38,8 @@ The app dynamically changes display settings (brightness, contrast, gamma) when 
             # or
             venv/scripts/activate
         pip install -r requirements.txt
-        python build.py | python src/main.py
+        # Build with
+        python build.py
+        # Or run with
+        python src/main.py
         ```

@@ -4,22 +4,22 @@ from rx.subject.behaviorsubject import BehaviorSubject
 from rx.operators import map, skip, debounce
 from rx.core import Observable
 from typing import TypedDict, List
-from env import Env
 
 
 class ConfigDict(TypedDict):
     """Configuration dictionary"""
+
     checkUpdates: bool
     launchMinimized: bool
     displays: List[str]
     applications: dict
     isWorkerActive: bool
+    logLevel: int
 
 
 class Config:
-    def __init__(self, env: Env):
-        self._env = env
-        self._config_path: str = self._env.CONFIG_PATH
+    def __init__(self, config_path):
+        self._config_path = config_path
         config = self._default_config
         try:
             data = self._read_config()
@@ -41,7 +41,8 @@ class Config:
             "launchMinimized": False,
             "displays": [],
             "applications": {},
-            "isWorkerActive": True
+            "isWorkerActive": True,
+            "logLevel": 30
         }
 
     def __del__(self):

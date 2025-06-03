@@ -27,7 +27,16 @@ html {
   @include mat.theme(
     (
       color: mat.$cyan-palette,
-      typography: Lato,
+      typography: (Lato, Roboto, Arial),
+      density: 0,
+    )
+  );
+}
+*.secondary {
+  @include mat.theme(
+    (
+      color: mat.$yellow-palette,
+      typography: (Lato, Roboto, Arial),
       density: 0,
     )
   );

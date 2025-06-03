@@ -1,5 +1,3 @@
-@use "@angular/material" as mat;
-
 :host {
   display: block;
   width: 100%;
@@ -28,11 +26,6 @@
   }
 
   .main-header {
-    @include mat.theme(
-      (
-        color: mat.$yellow-palette,
-      )
-    );
     padding: 20px;
     width: 100%;
     display: flex;
@@ -187,11 +180,6 @@
   }
 
   .main-footer {
-    @include mat.theme(
-      (
-        color: mat.$yellow-palette,
-      )
-    );
     display: flex;
     flex-direction: row;
     align-items: center;
