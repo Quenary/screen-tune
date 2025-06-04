@@ -18,6 +18,7 @@ from multiprocessing import Queue
 import json
 import logging
 import traceback
+from translate import TRANSLATIONS
 
 window_request_queue = Queue()
 window_response_queue = Queue()
@@ -30,7 +31,7 @@ if __name__ == "__main__":
     _config = Config(_env.CONFIG_PATH)
 
     logging.basicConfig(
-        level=_config.get_config().get('logLevel'),
+        level=_config.get_config().get("logLevel"),
         format="%(asctime)s - %(levelname)s - %(message)s",
         filename=_env.APP_LOG_PATH,
         encoding="utf-8",
@@ -58,7 +59,7 @@ if __name__ == "__main__":
                         _env.WINDOW_LOG_PATH,
                         _env.INDEX_PATH,
                         _env.ICON_PATH,
-                        _config.get_config().get('logLevel')
+                        _config.get_config().get("logLevel"),
                     ),
                     name="__window__",
                 )
@@ -105,18 +106,27 @@ if __name__ == "__main__":
                     pass
             time.sleep(0.1)
 
+    def check_updates():
+        time.sleep(1)
+        LATEST_RELEASE = _api.check_latest_release()
+        if LATEST_RELEASE.get("update_available", False):
+            icon.notify(
+                f"{TRANSLATIONS['UPDATE_MESSAGE']}",
+                f"{TRANSLATIONS['UPDATE_TITLE']} - {LATEST_RELEASE['latest_version']}",
+            )
+
     atexit.register(clean_up)
 
     image = Image.open(_env.ICON_PATH)
     menu = Menu(
         MenuItem(_env.DISPLAYED_APP_NAME, None, enabled=False),
         Menu.SEPARATOR,
-        MenuItem("Open", lambda: open_main_window(), default=True),
+        MenuItem(TRANSLATIONS["OPEN"], lambda: open_main_window(), default=True),
         MenuItem(
-            "Learn more",
+            TRANSLATIONS["PROJECT_PAGE"],
             lambda: webbrowser.open("https://github.com/Quenary/screen-tune"),
         ),
-        MenuItem("Exit", lambda: clean_up()),
+        MenuItem(TRANSLATIONS["EXIT"], lambda: clean_up()),
     )
     icon = Icon(
         _env.DISPLAYED_APP_NAME, image, title=_env.DISPLAYED_APP_NAME, menu=menu
@@ -132,5 +142,11 @@ if __name__ == "__main__":
     invokes_thread = Thread(target=listen_invokes, args=(clean_up_event,))
     invokes_thread.start()
 
+    if config["checkUpdates"] and icon.HAS_NOTIFICATION:
+        check_updates_thread = Thread(target=check_updates)
+        check_updates_thread.start()
+
     icon.run()
     invokes_thread.join()
+    if check_updates_thread:
+        check_updates_thread.join()

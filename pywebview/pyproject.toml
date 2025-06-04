@@ -5,6 +5,16 @@ description = "App provides controls over PC displays color settings (brightness
 authors = [
     {name = "Eugene Savin", email = "evgeny.savin.ad@gmail.com"}
 ]
+dependencies = [
+    "packaging>=24.2",
+    "psutil>=6.1.0",
+    "pystray>=0.19.5",
+    "pywebview>=5.3.2",
+    "requests>=2.32.3",
+    "Rx>=3.2.0",
+    "pyinstaller>=6.11.1",
+    "darkdetect>=0.8.0"
+]
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.11"

@@ -37,7 +37,7 @@ export class HeaderComponent {
 
   public checkUpdates() {
     this.appApiService.check_latest_release().subscribe((data) => {
-      if (!!data) {
+      if (!!data?.update_available) {
         const dialogRef = this.matDialog.open(NewVersionDialogComponent, {
           data,
         });

@@ -19,6 +19,7 @@ import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AppApiService } from './core/services/app-api/app-api.service';
 import { PywebviewApiService } from './core/services/app-api/pywebview-api.service';
+import { finalize } from 'rxjs';
 
 function TranslateInitializerFactory(environmentInjector: EnvironmentInjector) {
   return new Promise<any>((resolve: any) => {
@@ -28,11 +29,12 @@ function TranslateInitializerFactory(environmentInjector: EnvironmentInjector) {
     );
     const translateService = environmentInjector.get(TranslateService);
     locationInitialized.then(() => {
-      const langToSet = 'ru';
-      translateService.setDefaultLang(langToSet);
-      translateService.use(langToSet).subscribe({
-        complete: () => resolve(null),
-      });
+      translateService.addLangs(['ru', 'en']);
+      translateService.setDefaultLang('en');
+      translateService
+        .use(translateService.getBrowserLang())
+        .pipe(finalize(() => resolve(null)))
+        .subscribe();
     });
   });
 }

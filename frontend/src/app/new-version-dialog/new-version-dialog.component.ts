@@ -1,13 +1,17 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 import { IVersionCheckResponse } from '../core/interfaces/version-check';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-new-version-dialog',
-  imports: [
-    TranslateModule,
-  ],
+  imports: [TranslateModule, MatDialogTitle, MatDialogActions, MatButton],
   templateUrl: './new-version-dialog.component.html',
   styleUrl: './new-version-dialog.component.scss',
 })
