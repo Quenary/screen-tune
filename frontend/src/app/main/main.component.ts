@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, isDevMode } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -79,6 +79,10 @@ const configSaveInterval: number = 2000;
   styleUrl: './main.component.scss',
 })
 export class MainComponent {
+  /**
+   * Dev flag of frontend app
+   */
+  public readonly isDevMode = isDevMode();
   /**
    * Version of application
    */

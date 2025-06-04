@@ -10,15 +10,19 @@ class Env:
             self._working_dir = sys._MEIPASS
             self._index_path = os.path.join(self._working_dir, "frontend", "index.html")
             self._toml_path = os.path.join(self._working_dir, "pyproject.toml")
+            self._icon_path = os.path.join(self._working_dir, "assets", "icon.png")
+            self._config_path = os.path.join(self._working_dir, "..", "config.json")
+            self._app_log_path = os.path.join(self._working_dir, "..", "app.log")
+            self._window_log_path = os.path.join(self._working_dir, "..", "window.log")
         else:
             self._working_dir = os.path.dirname(__file__)
             self._index_path = "http://localhost:4200/"
             self._toml_path = os.path.join(self._working_dir, "..", "pyproject.toml")
-
-        self._icon_path = os.path.join(self._working_dir, "assets", "icon.png")
-        self._config_path = os.path.join(self._working_dir, "config.json")
-        self._app_log_path = os.path.join(self._working_dir, "app.log")
-        self._window_log_path = os.path.join(self._working_dir, "window.log")
+            self._icon_path = os.path.join(self._working_dir, "assets", "icon.png")
+            self._config_path = os.path.join(self._working_dir, "config.json")
+            self._app_log_path = os.path.join(self._working_dir, "app.log")
+            self._window_log_path = os.path.join(self._working_dir, "window.log")
+        
 
         with open(self._toml_path, "rb") as f:
             self._pyproject_data = tomllib.load(f)

@@ -10,6 +10,9 @@
       {{ "MAIN.TITLE" | translate }}
       <div class="main-header-title-version">
         {{ appVersion$ | async }}
+        @if (isDevMode) {
+          <span style="color: red;">Dev</span>
+        }
       </div>
     </div>
     <div class="main-header-toggle">
