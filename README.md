@@ -22,24 +22,26 @@ The app dynamically changes display settings (brightness, contrast, gamma) when 
 ### Develop:
 * Install node.js 22+ (nvm is recommended)
 * Install python 3.12+ (python-is-python3, python3-venv if needed)
-* Install frontend dependencies
-    * ### Frontend
-        ```
-        cd frontend
-        npm install
-        npm run start | npm run watch | npm run build
-        ```
-    * ### Pywebview
-        ```
-        cd pywebview
-        python -m venv venv
-            # activate venv with
-            source venv/bin/activate
-            # or
-            venv/scripts/activate
-        pip install -r requirements.txt
-        # Build with
-        python build.py
-        # Or run with
-        python src/main.py
-        ```
+   * ### Frontend
+     ```
+     cd frontend
+     npm install
+     # Build with
+     npm run build
+     # Or run with
+     npm run start
+     ```
+   * ### Pywebview
+     ```
+     cd pywebview
+     python -m venv venv
+         # activate venv with
+         source venv/bin/activate
+         # or
+         venv/scripts/activate
+     pip install .
+     # Build with
+     python build.py
+     # Or run with
+     python src/main.py
+     ```
